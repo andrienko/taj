@@ -20,53 +20,53 @@ And here comes another problem: it's hard to understand what's happening in a pr
 
 You have to create an instance and add methods to it (you can pass them in constructor). Then (if you need it) you set the initial value and chain methods you've just defined. Then you add the last, `.go` method, which receives a function that will be called once the chaining is done. The function will receive the resulting value (if there were any).
 
-	var taj = require('taj');
-	
-	var chain = new taj();
+    var taj = require('taj');
+    
+    var chain = new taj();
 
-	// Define the method called "upper"
+    // Define the method called "upper"
 
-	// Methods receive two parameters - the current value
+    // Methods receive two parameters - the current value
     // and the callback that should be called once everything
     // is done (instead of return)
 
-	chain.link('upper', function (input, output){
-   	  output(input.toUpperCase())
-	});
+    chain.link('upper', function (input, output){
+         output(input.toUpperCase())
+    });
 
 
     // In addition, they will receive all the arguments
     // you pass while chaining:
 
-	chain.link('add', function (input, output, string) {
-  	  output(input + string);
-	});
-	
-	// Now you can chain methods you've defined:
+    chain.link('add', function (input, output, string) {
+        output(input + string);
+    });
+    
+    // Now you can chain methods you've defined:
 
-	chain.set('hello') 				// setting the initial value
+    chain.set('hello')               // setting the initial value
 
-	  .add(', world!')				 
-	  .upper()
-	  .add('.. Hey!')
+      .add(', world!')                 
+      .upper()
+      .add('.. Hey!')
 
-	  .go(function (output) {		// command to start chain
-	      console.log(output);		// that receives a callback
-	    }							// that will be called once
-	  )								// chaining is done
-	;
+      .go(function (output) {        // command to start chain
+          console.log(output);       // that receives a callback
+        }                            // that will be called once
+      )                              // chaining is done
+    ;
 
 You can shorten things up by passing initial value and chain links inside the constructor:
 
-	var chain = new taj('hello',{
-	  upper:function (input, output){
-	    output(input.toUpperCase())
-	  },
-	  add:function (input, output, string) {
-	    output(input + string);
-	  }
+    var chain = new taj('hello',{
+      upper:function (input, output){
+        output(input.toUpperCase())
+      },
+      add:function (input, output, string) {
+        output(input + string);
+      }
 
-	});
+    });
 
 That is pretty much all
 
@@ -78,17 +78,17 @@ Some method names are reserved and you can not use them as names for your links 
 
 Creates a "link" in your "chain". Creating a link does not run your code - instead it creates the method of your chaining object. So, after typing
 
-	var chain = new taj([]);
-	chain.link('hero', function(heroes,output,name){
+    var chain = new taj([]);
+    chain.link('hero', function(heroes,output,name){
       heroes.push(name);
       output(heroes);
     });
 
 You create a new method you can call:
 
-	chain.hero('batman').hero('iron man').go(function(heroes){
+    chain.hero('batman').hero('iron man').go(function(heroes){
       console.log('Superheroes: ' + heroes.join(', '));
-	});
+    });
 
 This should output "Superheroes: batman,iron man"
 
@@ -98,11 +98,11 @@ Defines an error logger. This is not really meant for exceptions catching tho. O
 
 the lib silently ignore errors in your links by default. You can use the onError method to set error handler
 
-	new taj()
-	  .link('test',function(){meh();})
-	  .onError(function(){console.log.apply(console,[].slice.call(arguments));})
-	  .test()
-	  .go();
+    new taj()
+      .link('test',function(){meh();})
+      .onError(function(){console.log.apply(console,[].slice.call(arguments));})
+      .test()
+      .go();
 
 Should output something like `Error in test: { name: 'test', args: {} } function (){meh();} [ReferenceError: meh is not defined]`
 
@@ -114,7 +114,7 @@ Defines a callback that will be executed when chaining methods are finished. Wil
 
 Sets the value of the output. You could have written this method yourself: 
 
-	taj.link('set', function(input,output,value){ output(value) });
+    taj.link('set', function(input,output,value){ output(value) });
 
 #### go([callback])
 
@@ -124,29 +124,29 @@ Nothing will be executed until this method is called. If callback is passed - it
 
 Here's an idea then. Let's imagine we're in browser:
 
-	var AJAX = new taj('', {
-	  getBody:function (input, output, url) {
-	    var request = new XMLHttpRequest();
-	    request.open('GET', url, true);
-	
-	    request.onload = function () {
-	      var result = '';
-	      if(this.status>=200 && this.status<400){
-	        try{
-	          result = JSON.parse(this.response);
-	        } catch (e) {}
-	      }
-	      output(result);
-	    }
+    var AJAX = new taj('', {
+      getBody:function (input, output, url) {
+        var request = new XMLHttpRequest();
+        request.open('GET', url, true);
+    
+        request.onload = function () {
+          var result = '';
+          if(this.status>=200 && this.status<400){
+            try{
+              result = JSON.parse(this.response);
+            } catch (e) {}
+          }
+          output(result);
+        }
 
-	  }
-	});
+      }
+    });
 
 Now, calling something like this:
-	
-	AJAX.getBody('http://your.url').go(function (data) {
-	  console.log(data);
-	});
+    
+    AJAX.getBody('http://your.url').go(function (data) {
+      console.log(data);
+    });
 
 ..will result in parsed JSON (or an empty string on error) to be outputted to console.
 
