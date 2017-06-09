@@ -19,6 +19,9 @@ Taj.prototype = {
         that.output = output;
         that.__nextStep();
       };
+      outputFn.pass = function(){
+        that.__nextStep();
+      };
       outputFn.error = function (err) {
         that.__error_handler(err);
       };
