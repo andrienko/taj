@@ -1,0 +1,21 @@
+{
+  "name": "taj",
+  "version": "0.1.0",
+  "description": "Yet another task mechanism to work with async code",
+  "main": "taj.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrienko/taj.git"
+  },
+  "keywords": [
+    "pipe",
+    "jam",
+    "async"
+  ],
+  "author": "andrienko",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andrienko/taj/issues"
+  },
+  "homepage": "https://github.com/andrienko/taj#readme"
+}
