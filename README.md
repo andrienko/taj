@@ -120,7 +120,7 @@ Sets the value of the output. You could have written this method yourself:
 
 Nothing will be executed until this method is called. If callback is passed - it will be same as calling `onReady(callback).go()`
 
-### What about asynchronous calls?
+### So, what about asynchronous calls?
 
 Here's an idea then. Let's imagine we're in browser:
 
