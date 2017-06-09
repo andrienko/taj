@@ -1,6 +1,6 @@
 {
   "name": "taj",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Yet another task mechanism to work with async code",
   "main": "taj.js",
   "repository": {
