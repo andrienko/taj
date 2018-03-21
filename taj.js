@@ -6,7 +6,8 @@
     if(!this instanceof Lib) return new Lib();
     this.__state = {
       queue: [],
-      callbacks: {}
+      callbacks: {},
+      events: {}
     }
   };
 
@@ -33,7 +34,32 @@
     }
   };
 
-  Lib.prototype.__state = {queue:[],callbacks:{}};
+  var TajEvent = function(target, name, data){
+    this.eventName = name;
+    this.data = data;
+    this.target = target;
+  };
+
+  var triggerEvent = function(object, eventName, eventData){
+    if(object.__state.events[eventName] === undefined){
+      return;
+    }
+    var event = new TajEvent(object,eventName,eventData || {})
+    object.__state.events[eventName].forEach(function(callback){
+      callback.call(object,event);
+    })
+  };
+
+  Lib.prototype.addEventListener = function(eventName, callback){
+    if(typeof callback !== 'function'){
+      return;
+    }
+    if(this.__state.events[eventName] === undefined) this.__state.events[eventName] = [];
+    this.__state.events[eventName].push(callback);
+    return this;
+  };
+
+  Lib.prototype.__state = {queue:[],callbacks:{},events:{}};
 
   Lib.prototype.registerCallback = function(name, callback){
     if(typeof callback === 'function'){
@@ -44,6 +70,7 @@
 
   Lib.prototype.resetQueue = function(){
     this.__state.queue.queue.length = 0;
+    return this;
   };
 
   Lib.prototype.registerCallbacks = function(callbacks){
@@ -64,16 +91,22 @@
         var queueStep = instance.__state.queue[queueCounter++];
 
         var pass = function(value){
+          triggerEvent(instance, 'next',value);
           thisArg = value;
           nextStep();
         };
         pass.error = function(error){
-          // Error handling
+          triggerEvent(instance,'error',error);
+        };
+        pass.pass = function(){
+          triggerEvent(instance, 'pass');
+          nextStep();
         };
 
         queueStep.callback.apply(thisArg, [].concat.apply([pass], queueStep.arguments));
       } else {
         if(typeof finalCallback === 'function') {
+          triggerEvent(instance, 'done',thisArg);
           finalCallback.apply(thisArg, []);
         }
       }

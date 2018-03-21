@@ -48,4 +48,14 @@ functions.
  - When passing primitive values through the chain - the object will be returned (because `apply` is used). If you want
  to explicitly use primitive values the best way would be wrapping them with an object, something like 
  `.run({value: 'Hello'}, function(){ ... })`
+ - `pass` function that every callback receives, must be always called (in order to proceed to next chain queue item).
+ - `pass` also has two properties - `pass.error` and `pass.pass`. `pass.error` will call the error handler, `pass.pass`
+ will proceed to next link without modifying the `this` argument.
+ 
+Events
+---
+You can use addEventListener to add event listeners. For now event listeners are `next`, `pass`, `error` and `done`.
 
+    chain.addEventListener('next', function(e){
+      console.log('Modified:', e.data);
+    });
