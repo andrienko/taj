@@ -1,7 +1,7 @@
 {
   "name": "taj",
-  "version": "0.2.0",
-  "description": "Yet another task mechanism to work with async code",
+  "version": "1.0.0",
+  "description": "Create pipes. Pull data through. Get result.",
   "main": "taj.js",
   "repository": {
     "type": "git",
@@ -14,8 +14,5 @@
   ],
   "author": "andrienko",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/andrienko/taj/issues"
-  },
   "homepage": "https://github.com/andrienko/taj#readme"
 }
